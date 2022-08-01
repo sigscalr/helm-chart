@@ -3,7 +3,7 @@ name: Upload Helm Charts
 on:
   push:
     branches:
-      - cr-action
+      - main
 
 jobs:
   release:
