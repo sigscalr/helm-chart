@@ -5,8 +5,8 @@ SigScalr Helm Chart provides a simple deployment for a highly performant, low ov
 # TLDR Installation:
 
 ```
-helm repo add sigscalrrepo https://sigscalr.github.io/helm-chart
-helm install sigscalr sigscalrrepo/sigscalr
+helm repo add sigscalr-repo https://sigscalr.github.io/helm-chart
+helm install sigscalr sigscalr-repo/sigscalr
 ```
 
 # Installation
