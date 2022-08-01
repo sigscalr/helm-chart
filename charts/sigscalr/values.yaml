@@ -2,7 +2,7 @@
 sigscalr:
   core:
     image:
-      repository: 872191018532.dkr.ecr.us-east-1.amazonaws.com/sigscalr-dev
+      repository: public.ecr.aws/l3t9n5v5/sigscalr
       pullPolicy: Always
       tag: latest
       # by default, a headless service is always created for sigscalr. Another service can be created using configs below
@@ -15,7 +15,7 @@ sigscalr:
   ui:
     enabled: true
     image:
-      repository: 872191018532.dkr.ecr.us-east-1.amazonaws.com/sigscalrui-dev
+      repository: public.ecr.aws/l3t9n5v5/sigscalrui
       pullPolicy: Always
       tag: latest
     service: 
