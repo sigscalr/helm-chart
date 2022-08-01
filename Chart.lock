@@ -1,6 +1,0 @@
-dependencies:
-- name: sigscalr
-  repository: file://charts/sigscalr
-  version: 0.1.0
-digest: sha256:c3ab3c3366b3930bf37693a3734dd59bb78d85e85da23763b4a45fe5f255a753
-generated: "2021-11-28T12:30:15.173728-08:00"

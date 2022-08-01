@@ -20,7 +20,8 @@ git clone
 helm install sigscalr .
 ```
 
-Important configs in `values.yaml`
+Important configs in `values.yaml`:
+
 | Values      | Description |
 | ----------- | ----------- |
 | sigscalr.configs      | Server configs for sigscalr       |
