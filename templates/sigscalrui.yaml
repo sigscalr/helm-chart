@@ -1,0 +1,93 @@
+{{- if .Values.sigscalr.ui.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ include "sigscalr.fullname" . }}-ui
+    namespace: {{ .Release.Namespace }}
+    labels:
+        {{- include "sigscalr-ui.labels" . | nindent 6 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "sigscalr-ui.selectorLabels" . | nindent 6 }}
+  replicas: 1
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sigscalr-ui.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sigscalr.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.sigscalr.ui.image.repository }}:{{ .Values.sigscalr.ui.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.sigscalr.ui.image.pullPolicy }}
+          command: ["./sigscalr-ui", "--fileLocation", "/sigscalr/server.yaml"]
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            failureThreshold: 60
+            periodSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          ports:
+            - name: http
+              containerPort: {{ .Values.sigscalr.configs.uiPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ .Chart.Name }}-server-config
+              mountPath: /sigscalr/server.yaml
+              subPath: server.yaml
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: {{ .Chart.Name }}-ui-config
+        configMap:
+          name: {{ .Chart.Name }}-ui-config
+          items:
+          - key: config.json
+            path: config.json
+      - name: {{ .Chart.Name }}-server-config
+        configMap:
+          name: {{ .Chart.Name }}-server-config
+          items:
+          - key: server.yaml
+            path: server.yaml
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sigscalr.fullname" . }}-ui
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "sigscalr-ui.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.sigscalr.ui.service.annotations | nindent 4 }}
+spec:
+  type: "{{ .Values.sigscalr.ui.service.serviceType }}"
+  ports:
+    - port: {{ .Values.sigscalr.ui.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "sigscalr-ui.selectorLabels" . | nindent 4 }}
+{{ end }}

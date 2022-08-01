@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: {{ include "sigscalr.fullname" . }}
+    namespace: {{ .Release.Namespace }}
+    labels:
+        {{- include "sigscalr-server.labels" . | nindent 6 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "sigscalr-server.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "sigscalr.serviceAccountName" . }}
+  replicas: 1
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "sigscalr-server.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sigscalr.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.sigscalr.core.image.repository }}:{{ .Values.sigscalr.core.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.sigscalr.core.image.pullPolicy }}
+          command: ["./hyperion", "--fileLocation", "/sigscalr/server.yaml"]
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            failureThreshold: 60
+            periodSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          ports:
+            - name: http
+              containerPort: {{ .Values.sigscalr.configs.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ .Chart.Name }}-volume-claim
+              mountPath: /sigscalr
+            - name: {{ .Chart.Name }}-server-config
+              mountPath: /sigscalr/server.yaml
+              subPath: server.yaml
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: {{ .Chart.Name }}-server-config
+        configMap:
+          name: {{ .Chart.Name }}-server-config
+          items:
+          - key: server.yaml
+            path: server.yaml
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Chart.Name }}-volume-claim
+      namespace: {{ .Release.Namespace }}
+    spec:
+      {{- include "sigscalr.storageClass" . | nindent 6 }}
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi

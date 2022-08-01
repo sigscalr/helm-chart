@@ -1,0 +1,28 @@
+Thank you for installing {{ .Chart.Name }}.
+
+To learn more about the release, try:
+  $ helm status {{ .Release.Name }}
+
+To run tests, try:
+  $ helm test {{ .Release.Name }}
+
+{{- if .Values.sigscalr.core.service.alternateServiceType -}}
+{{printf "\n" }}
+Forward local port 1234 to the alternative service using: 
+  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-svc 1234:{{ .Values.sigscalr.core.service.port }}
+
+{{- end -}}
+{{- if .Values.sigscalr.ui.enabled -}}
+{{printf "\n" }}
+
+{{- if eq .Values.sigscalr.ui.service.serviceType "ClusterIP" }}
+
+UI is enabled with a ClusterIP service
+Forward local port 8000 to the ui service using: 
+  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-ui 8000:{{ .Values.sigscalr.ui.service.port }}
+
+Then, access the UI in a browser with:
+  $ http://localhost:8000
+{{- end -}}
+
+{{- end -}}

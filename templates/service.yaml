@@ -1,0 +1,20 @@
+{{- if .Values.sigscalr.core.service.alternateServiceType -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sigscalr.fullname" . }}-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "sigscalr-server.labels" . | nindent 4 }}
+  annotations:
+    {{- toYaml .Values.core.service.annotations | nindent 4 }}
+spec:
+  type: "{{ .Values.sigscalr.core.service.alternateServiceType }}"
+  ports:
+    - port: {{ .Values.sigscalr.core.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "sigscalr-server.selectorLabels" . | nindent 4 }}
+{{- end -}}

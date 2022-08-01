@@ -1,0 +1,16 @@
+{{- if not .Values.sigscalr.storage.defaultClass -}}
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: {{ .Chart.Name }}-storage-class
+  namespace: {{ .Release.Namespace }}
+{{ if .Values.sigscalr.storage.awsEBS }}
+provisioner: kubernetes.io/aws-ebs
+parameters: {{ .Values.sigscalr.storage.awsEBS.parameters}}
+{{ else if .Values.sigscalr.storage.local }}
+provisioner: kubernetes.io/no-provisioner
+{{ end }}
+reclaimPolicy: Retain
+allowVolumeExpansion: true
+volumeBindingMode: WaitForFirstConsumer
+{{ end }}

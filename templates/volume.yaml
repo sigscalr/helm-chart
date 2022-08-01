@@ -1,0 +1,27 @@
+{{- if .Values.sigscalr.storage.local -}}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: {{ .Chart.Name }}-local-pv
+    namespace: {{ .Release.Namespace }}
+    labels:
+        {{- include "sigscalr.labels" . | nindent 8 }}
+spec:
+    storageClassName: {{ .Chart.Name }}-storage-class
+    volumeMode: Filesystem
+    accessModes:
+        - ReadWriteOnce
+    persistentVolumeReclaimPolicy: Recycle
+    capacity:
+      storage: {{ .Values.sigscalr.storage.local.capacity }}
+    local:
+      path: {{ .Values.sigscalr.storage.local.path }}
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+          - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - {{ .Values.sigscalr.storage.local.hostname }}
+{{ end }}
