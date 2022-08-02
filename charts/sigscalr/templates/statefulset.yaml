@@ -33,7 +33,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.sigscalr.core.image.repository }}:{{ .Values.sigscalr.core.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.sigscalr.core.image.pullPolicy }}
-          command: ["./hyperion", "--fileLocation", "/sigscalr/server.yaml"]
+          command: ["./hyperion", "--config", "/sigscalr/server.yaml"]
           startupProbe:
             httpGet:
               path: /health
