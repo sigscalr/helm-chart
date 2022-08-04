@@ -58,10 +58,6 @@ logsExporter:
     repository: fluent/fluentd-kubernetes-daemonset
     pullPolicy: IfNotPresent
     tag: v1.14-debian-elasticsearch7-1
-  configs:
-    # if indexPrefix is not defined, prefix defaults go to namespace-logs
-    # all logs will go to indexPrefix-${record['kubernetes']['namespace_name']}
-    indexPrefix: namespace
 
 imagePullSecrets: []
 nameOverride: ""

@@ -133,18 +133,3 @@ SigScalr UI Selector labels
 app.kubernetes.io/name: {{ include "sigscalr.name" . }}-ui
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Logs Exporter index prefix
-*/}}
-{{- define "fluentd-index-prefix" -}}
-{{ if .Values.logsExporter -}}
-{{ if .Values.logsExporter.configs }}
-{{- default "namespace-logs" .Values.logsExporter.configs.indexPrefix -}}
-{{- else }}
-{{- printf "namespace-logs" }}
-{{- end }}
-{{- else }}
-{{- printf "namespace-logs" }}
-{{- end }}
-{{- end }}

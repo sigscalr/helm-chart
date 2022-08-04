@@ -32,3 +32,30 @@ Important configs in `values.yaml`
 | service.alternateServiceType | by default, a headless service is always created for sigscalr. Another service can be created using configs below |
 
 If k8sExporter or logsExporter is enabled, then a ClusterRole will be created to get/watch/list all resources in all apigroups. Which resources and apiGroups can be edited in serviceAccount.yaml
+
+
+### Storage options
+
+Currently, only `awsEBS` and `local` storage classes provisioners can be configured by setting `storage.defaultClass: false` and setting the required configs. To add more types of storage classes, add the necessary provisioner info to [`storage.yaml`](charts/sigscalr/templates/storage.yaml). 
+
+It it reccomended to use a storage class that supports volume expansion. 
+
+Example configuration to use an EBS storage class.
+```
+storage:
+    defaultClass: false
+    awsEBS:
+      parameters: 
+        type: "gp2"
+        fsType: "ext4"
+```
+
+Example configuration to use a local storage class.
+```
+storage:
+    defaultClass: false
+    local:
+        hostname: minikube
+        capacity: 5Gi 
+        path: /data # must be present on local machine
+```
