@@ -11,7 +11,6 @@ sigscalr:
       port: 80
       annotations: {}
 
-
   ui:
     enabled: true
     image:
@@ -29,7 +28,10 @@ sigscalr:
 
   storage:
     # set to true for default class, else will create a new class with below arguments
-    defaultClass: true 
+    defaultClass: true
+
+    # size of the volume the PVC will request
+    size: 10Gi 
 
     # Use EBS volume as default storage class
     # awsEBS:

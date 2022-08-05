@@ -133,3 +133,18 @@ SigScalr UI Selector labels
 app.kubernetes.io/name: {{ include "sigscalr.name" . }}-ui
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+SigScalr PVC storage size
+*/}}
+{{- define "sigscalr-pvc.size" -}}
+{{ if .Values.sigscalr }}
+{{ if .Values.sigscalr.storage }}
+{{ if .Values.sigscalr.storage.size }}
+storage: {{ .Values.sigscalr.storage.size }}
+{{ else }}
+storage: 10Gi
+{{ end }}
+{{ end }}
+{{ end }}
+{{- end }}

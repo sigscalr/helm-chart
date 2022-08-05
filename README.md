@@ -25,6 +25,7 @@ Important configs in `values.yaml`
 | ----------- | ----------- |
 | sigscalr.configs      | Server configs for sigscalr       |
 | sigscalr.storage   | Defines storage class to use for sigscalr StatefulSet        |
+| sigscalr.storage.size | Storage size for persistent volume claim. Recommended to be half of license limit |
 | k8sExporter.enabled   | Enable automatic exporting of k8s events using [an exporting tool](https://github.com/opsgenie/kubernetes-event-exporter)      |
 | k8sExporter.configs.index   | Output index name for kubernetes events      |
 | logsExporter.enabled   | Enable automatic exporting of logs using a Daemonset [fluentd](https://docs.fluentd.org/container-deployment/kubernetes)      |
@@ -33,12 +34,11 @@ Important configs in `values.yaml`
 
 If k8sExporter or logsExporter is enabled, then a ClusterRole will be created to get/watch/list all resources in all apigroups. Which resources and apiGroups can be edited in serviceAccount.yaml
 
-
-### Storage options
+## Storage options
 
 Currently, only `awsEBS` and `local` storage classes provisioners can be configured by setting `storage.defaultClass: false` and setting the required configs. To add more types of storage classes, add the necessary provisioner info to [`storage.yaml`](charts/sigscalr/templates/storage.yaml). 
 
-It it reccomended to use a storage class that supports volume expansion. 
+It it recommended to use a storage class that supports volume expansion. 
 
 Example configuration to use an EBS storage class.
 ```

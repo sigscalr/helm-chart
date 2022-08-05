@@ -76,4 +76,5 @@ spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 1Gi
+          storage: 
+          {{ include "sigscalr-pvc.size" . | nindent 2}}
