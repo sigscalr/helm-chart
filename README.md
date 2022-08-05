@@ -44,6 +44,7 @@ Example configuration to use an EBS storage class.
 ```
 storage:
     defaultClass: false
+    size: 20Gi
     awsEBS:
       parameters: 
         type: "gp2"
@@ -54,6 +55,7 @@ Example configuration to use a local storage class.
 ```
 storage:
     defaultClass: false
+    size: 20Gi
     local:
         hostname: minikube
         capacity: 5Gi 
