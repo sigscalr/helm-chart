@@ -135,16 +135,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Logs Exporter index prefix
+SigScalr PVC storage size
 */}}
-{{- define "fluentd-index-prefix" -}}
-{{ if .Values.logsExporter -}}
-{{ if .Values.logsExporter.configs }}
-{{- default "namespace-logs" .Values.logsExporter.configs.indexPrefix -}}
-{{- else }}
-{{- printf "namespace-logs" }}
-{{- end }}
-{{- else }}
-{{- printf "namespace-logs" }}
-{{- end }}
+{{- define "sigscalr-pvc.size" -}}
+{{ if .Values.sigscalr }}
+{{ if .Values.sigscalr.storage }}
+{{ if .Values.sigscalr.storage.size }}
+storage: {{ .Values.sigscalr.storage.size }}
+{{ else }}
+storage: 10Gi
+{{ end }}
+{{ end }}
+{{ end }}
 {{- end }}

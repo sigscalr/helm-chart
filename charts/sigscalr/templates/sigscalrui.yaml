@@ -33,7 +33,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.sigscalr.ui.image.repository }}:{{ .Values.sigscalr.ui.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.sigscalr.ui.image.pullPolicy }}
-          command: ["./sigscalr-ui", "--fileLocation", "/sigscalr/server.yaml"]
+          command: ["./sigscalr-ui", "--config", "/sigscalr/server.yaml"]
           startupProbe:
             httpGet:
               path: /

@@ -6,11 +6,12 @@ metadata:
   namespace: {{ .Release.Namespace }}
 {{ if .Values.sigscalr.storage.awsEBS }}
 provisioner: kubernetes.io/aws-ebs
-parameters: {{ .Values.sigscalr.storage.awsEBS.parameters}}
+parameters: 
+{{ toYaml .Values.sigscalr.storage.awsEBS.parameters | indent 2 }}
 {{ else if .Values.sigscalr.storage.local }}
 provisioner: kubernetes.io/no-provisioner
 {{ end }}
-reclaimPolicy: Retain
+reclaimPolicy: Delete
 allowVolumeExpansion: true
 volumeBindingMode: WaitForFirstConsumer
 {{ end }}
