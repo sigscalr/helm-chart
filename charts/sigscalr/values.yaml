@@ -4,7 +4,7 @@ sigscalr:
     image:
       repository: public.ecr.aws/l3t9n5v5/sigscalr
       pullPolicy: Always
-      tag: 1.1.8
+      tag: 1.1.9
       # by default, a headless service is always created for sigscalr. Another service can be created using configs below
     service:
       alternateServiceType: ""
@@ -16,7 +16,7 @@ sigscalr:
     image:
       repository: public.ecr.aws/l3t9n5v5/sigscalrui
       pullPolicy: Always
-      tag: 1.1.8
+      tag: 1.1.9
     service: 
       serviceType: LoadBalancer
       port: 5000
