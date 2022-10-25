@@ -122,9 +122,8 @@ data:
         index_name kubernetes-logs
         <buffer>
             flush_mode interval
-            flush_interval 10s
-            flush_thread_count 8
-            queue_limit_length 32
+            flush_interval 30s
+            flush_thread_count 2
             retry_max_interval 30
             retry_forever true
         </buffer>
