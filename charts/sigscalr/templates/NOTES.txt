@@ -6,23 +6,18 @@ To learn more about the release, try:
 To run tests, try:
   $ helm test {{ .Release.Name }}
 
-{{- if .Values.sigscalr.core.service.alternateServiceType -}}
+{{- if .Values.sigscalr.ingest.service.serviceType -}}
 {{printf "\n" }}
-Forward local port 1234 to the alternative service using: 
-  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-svc 1234:{{ .Values.sigscalr.core.service.port }}
+Forward local port 1234 to the ingest service using: 
+  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-ingest-svc 1234:{{ .Values.sigscalr.ingest.service.port }}
 
 {{- end -}}
-{{- if .Values.sigscalr.ui.enabled -}}
-{{printf "\n" }}
-
-{{- if eq .Values.sigscalr.ui.service.serviceType "ClusterIP" }}
+{{- if eq .Values.sigscalr.query.service.serviceType "ClusterIP" }}
 
 UI is enabled with a ClusterIP service
-Forward local port 8000 to the ui service using: 
-  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-ui 8000:{{ .Values.sigscalr.ui.service.port }}
+Forward local port 8000 to the UI / query service using: 
+  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-query-svc 8000:{{ .Values.sigscalr.query.service.port }}
 
 Then, access the UI in a browser with:
   $ http://localhost:8000
-{{- end -}}
-
 {{- end -}}

@@ -37,7 +37,7 @@ spec:
           - name: FLUENT_ELASTICSEARCH_PATH
             value: "/elastic"
           - name:  FLUENT_ELASTICSEARCH_PORT
-            value: "{{ .Values.sigscalr.configs.port }}"
+            value: "{{ .Values.sigscalr.configs.ingestPort }}"
           - name: FLUENT_ELASTICSEARCH_SCHEME
             value: "http"
           - name: FLUENT_ELASTICSEARCH_SSL_VERIFY

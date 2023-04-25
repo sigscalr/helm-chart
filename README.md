@@ -1,6 +1,6 @@
 # SigScalr Helm Chart
 
-SigScalr Helm Chart provides a simple deployment for a highly performant, low overhead log managment system that supports automatic Kubernetes events & container logs exporting
+SigScalr Helm Chart provides a simple deployment for a highly performant, low overhead observability solution that supports automatic Kubernetes events & container logs exporting
 
 # TLDR Installation:
 
@@ -12,7 +12,6 @@ helm install sigscalr sigscalr-repo/sigscalr
 # Installation
 
 Please ensure that `helm` is installed.
-
 
 To install SigScalr from source:
 ```bash
@@ -26,13 +25,8 @@ Important configs in `values.yaml`
 | sigscalr.configs      | Server configs for sigscalr       |
 | sigscalr.storage   | Defines storage class to use for sigscalr StatefulSet        |
 | sigscalr.storage.size | Storage size for persistent volume claim. Recommended to be half of license limit |
-| sigscalr.core.service.alternateServiceType | by default, a headless service is always created for sigscalr. Another service can be created by defining this config |
-| sigscalr.core.service.port | Port used by the sigscalr service |
-| sigscalr.core.service.annotations | Annotations used for the sigscalr service |
-| sigscalr.ui.enabled | Enable the SigScalr UI |
-| sigscalr.ui.service.serviceType | How to expose the SigScalr UI service |
-| sigscalr.ui.service.port | Port used by the SigScalrUI service |
-| sigscalr.ui.service.annotations | Annotations used by the SigScalrUI service |
+| sigscalr.ingest.service | Configurations to expose an ingest service |
+| sigscalr.ingest.service | Configurations to expose a query service |
 | k8sExporter.enabled   | Enable automatic exporting of k8s events using [an exporting tool](https://github.com/opsgenie/kubernetes-event-exporter)      |
 | k8sExporter.configs.index   | Output index name for kubernetes events      |
 | logsExporter.enabled   | Enable automatic exporting of logs using a Daemonset [fluentd](https://docs.fluentd.org/container-deployment/kubernetes)      |

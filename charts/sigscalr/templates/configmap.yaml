@@ -13,7 +13,4 @@ data:
     {{ else }}
     esVersion: "7.9.3"
     {{ end }}
-    {{ if .Values.sigscalr.ui.enabled }} # add redirect url for ui in config
-    sigscalrHost: {{ include "sigscalr.fullname" . }}:{{ .Values.sigscalr.configs.port }}
-    {{ end }}
     {{- toYaml .Values.sigscalr.configs | nindent 4 }}

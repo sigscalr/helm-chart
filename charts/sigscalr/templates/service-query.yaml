@@ -1,0 +1,20 @@
+{{- if .Values.sigscalr.query.service.serviceType -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sigscalr.fullname" . }}-query-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{ include "sigscalr-server.labels" . | nindent 4 }}
+  annotations:
+    {{ toYaml .Values.sigscalr.query.service.annotations | nindent 4 }}
+spec:
+  type: {{ .Values.sigscalr.query.service.serviceType }}
+  ports:
+    - port: {{ .Values.sigscalr.query.service.port }}
+      targetPort: queryport
+      protocol: TCP
+      name: query-http
+  selector:
+    {{- include "sigscalr-server.selectorLabels" . | nindent 4 -}}
+{{- end -}}
