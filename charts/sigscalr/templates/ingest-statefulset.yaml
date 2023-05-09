@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+    name: {{ include "sigscalr.fullname" . }}-ingest-server
+    namespace: {{ .Release.Namespace }}
+    labels:
+        {{ include "sigscalr-ingest-server.labels" . | nindent 6 }}
+spec:
+  selector:
+    matchLabels:
+      {{ include "sigscalr-ingest-server.selectorLabels" . | nindent 6 }}
+  serviceName: {{ include "sigscalr.serviceAccountName" . }}
+  replicas: {{ .Values.sigscalr.ingestReplicas }}
+  template:
+    metadata:
+      {{ with .Values.podAnnotations }}
+      annotations:
+        {{ toYaml . | nindent 8 }}
+      {{ end }}
+      labels:
+        {{ include "sigscalr-ingest-server.selectorLabels" . | nindent 8 }}
+    spec:
+      {{ with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{ toYaml . | nindent 8 }}
+      {{ end }}
+      serviceAccountName: {{ include "sigscalr.serviceAccountName" . }}
+      securityContext:
+        {{ toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{ toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.sigscalr.image.repository }}:{{ .Values.sigscalr.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.sigscalr.image.pullPolicy }}
+          command: ["./sigscalr", "--config", "server.yaml"]
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: ingestport
+              scheme: HTTP
+            failureThreshold: 30
+            periodSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: ingestport
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          ports:
+            - name: ingestport
+              containerPort: {{ .Values.sigscalr.configs.ingestPort }}
+              protocol: TCP
+          volumeMounts:
+            - name: {{ .Chart.Name }}-volume-claim
+              mountPath: /sigscalr/data
+            - name: {{ .Chart.Name }}-ingest-config
+              mountPath: /sigscalr/server.yaml
+              subPath: server.yaml
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .Values.aws.accessKey }} ## TODO: use secrets
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .Values.aws.secretKey }} ## TODO: use secrets
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.aws.region }} ## TODO: use secrets
+          resources:
+            {{ toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: {{ .Chart.Name }}-ingest-config
+        configMap:
+          name: {{ .Chart.Name }}-ingest-config
+          items:
+          - key: server.yaml
+            path: server.yaml
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Chart.Name }}-volume-claim
+      namespace: {{ .Release.Namespace }}
+    spec:
+      {{ include "sigscalr.storageClass" . | nindent 6 }}
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          {{ include "sigscalr-pvc.size" . | nindent 10 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sigscalr.fullname" . }}-ingest
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{ include "sigscalr-ingest-server.labels" . | nindent 4 }}
+spec:
+  clusterIP: None
+  ports:
+    - port: {{ .Values.sigscalr.configs.ingestPort }}
+      targetPort: ingestport
+      protocol: TCP
+      name: ingestport
+  selector:
+    {{ include "sigscalr-ingest-server.selectorLabels" . | nindent 4 }}

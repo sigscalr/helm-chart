@@ -1,9 +1,9 @@
 # Default values for sigscalr.
 sigscalr:
   image:
-    repository: public.ecr.aws/l3t9n5v5/sigscalr
-    pullPolicy: Always
-    tag: 1.1.16
+    repository: sigscalr
+    pullPolicy: IfNotPresent
+    tag: minikube
   ingest:
     service:
       serviceType: "ClusterIP"
@@ -15,11 +15,17 @@ sigscalr:
       port: 8000
       annotations: {}
   
+  ingestReplicas: 2
+  queryReplicas: 2
+  # sigscalr configuration
   configs:
     ingestPort: 8081 # port used for sigscalr ingestion servers
     queryPort: 8000 # port used for sigscalr ui webserver
-    queryNode: true
-    ingestNode: true
+    grpcPort: 50051 # port used for sigscalr grpc server
+    s3:
+      enabled: true # if etcd is enabled, s3 is required
+      bucketName: sri-tests
+      regionName: us-west-1
 
   storage:
     # set to true for default class, else will create a new class with below arguments
@@ -37,6 +43,14 @@ sigscalr:
     #   hostname: minikube
     #   capacity: 5Gi 
     #   path: /data
+
+# ETCD is used as a distributed key-value store for sigscalr horizontal scaling and HA
+etcd:
+  enabled: true
+  auth:
+    rbac:
+      create: false
+    
 
 k8sExporter:
   # Enable k8s events exporter to automatically ship events to sigscalr. If enabled, a cluster role will be created
@@ -96,3 +110,10 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
+
+aws:
+  # AWS credentials
+  # TODO: use secrets
+  accessKey: ""
+  secretKey: ""
+  region: "us-west-1"

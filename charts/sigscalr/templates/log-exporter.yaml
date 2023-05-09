@@ -33,7 +33,7 @@ spec:
           {{- toYaml .Values.resources | nindent 12 }}
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
-            value: {{ include "sigscalr.fullname" . }}
+            value: {{ include "sigscalr.fullname" . }}-ingest
           - name: FLUENT_ELASTICSEARCH_PATH
             value: "/elastic"
           - name:  FLUENT_ELASTICSEARCH_PORT

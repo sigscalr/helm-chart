@@ -65,7 +65,7 @@ data:
       - name: "sigscalr"
         elasticsearch:
           hosts:
-            - http://{{ include "sigscalr.fullname" . }}:{{ .Values.sigscalr.configs.ingestPort }}/elastic
+            - http://{{ include "sigscalr.fullname" . }}-ingest:{{ .Values.sigscalr.configs.ingestPort }}/elastic
           index: {{ .Values.k8sExporter.configs.index }}
           useEventID: false
 {{ end }}

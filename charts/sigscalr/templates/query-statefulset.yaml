@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-    name: {{ include "sigscalr.fullname" . }}
+    name: {{ include "sigscalr.fullname" . }}-query-server
     namespace: {{ .Release.Namespace }}
     labels:
-        {{ include "sigscalr-server.labels" . | nindent 6 }}
+        {{ include "sigscalr-query-server.labels" . | nindent 6 }}
 spec:
   selector:
     matchLabels:
-      {{ include "sigscalr-server.selectorLabels" . | nindent 6 }}
+      {{ include "sigscalr-query-server.selectorLabels" . | nindent 6 }}
   serviceName: {{ include "sigscalr.serviceAccountName" . }}
-  replicas: 1
+  replicas: {{ .Values.sigscalr.queryReplicas }}
   template:
     metadata:
       {{ with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{ toYaml . | nindent 8 }}
       {{ end }}
       labels:
-        {{ include "sigscalr-server.selectorLabels" . | nindent 8 }}
+        {{ include "sigscalr-query-server.selectorLabels" . | nindent 8 }}
     spec:
       {{ with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -39,10 +39,6 @@ spec:
               path: /api/health
               port: queryport
               scheme: HTTP
-            httpGet:
-              path: /api/health
-              port: ingestport
-              scheme: HTTP
             failureThreshold: 30
             periodSeconds: 1
           livenessProbe:
@@ -50,31 +46,31 @@ spec:
               path: /api/health
               port: queryport
               scheme: HTTP
-            httpGet:
-              path: /api/health
-              port: ingestport
-              scheme: HTTP
             initialDelaySeconds: 10
-            periodSeconds: 10
+            periodSeconds: 5
           ports:
             - name: queryport
               containerPort: {{ .Values.sigscalr.configs.queryPort }}
               protocol: TCP
-            - name: ingestport
-              containerPort: {{ .Values.sigscalr.configs.ingestPort }}
-              protocol: TCP
           volumeMounts:
             - name: {{ .Chart.Name }}-volume-claim
               mountPath: /sigscalr/data
-            - name: {{ .Chart.Name }}-server-config
+            - name: {{ .Chart.Name }}-query-config
               mountPath: /sigscalr/server.yaml
               subPath: server.yaml
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ .Values.aws.accessKey }} ## TODO: use secrets
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ .Values.aws.secretKey }} ## TODO: use secrets
+            - name: AWS_DEFAULT_REGION
+              value: {{ .Values.aws.region }} ## TODO: use secrets
           resources:
             {{ toYaml .Values.resources | nindent 12 }}
       volumes:
-      - name: {{ .Chart.Name }}-server-config
+      - name: {{ .Chart.Name }}-query-config
         configMap:
-          name: {{ .Chart.Name }}-server-config
+          name: {{ .Chart.Name }}-query-config
           items:
           - key: server.yaml
             path: server.yaml
@@ -92,20 +88,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "sigscalr.fullname" . }}
+  name: {{ include "sigscalr.fullname" . }}-query-headless
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "sigscalr-server.labels" . | nindent 4 }}
+    {{ include "sigscalr-query-server.labels" . | nindent 4 }}
 spec:
   clusterIP: None
   ports:
-    - port: {{ .Values.sigscalr.configs.ingestPort }}
-      targetPort: ingestport
-      protocol: TCP
-      name: ingestport
     - port: {{ .Values.sigscalr.configs.queryPort }}
       targetPort: queryport
       protocol: TCP
       name: queryport
   selector:
-    {{ include "sigscalr-server.selectorLabels" . | nindent 4 }}
+    {{ include "sigscalr-query-server.selectorLabels" . | nindent 4 }}
