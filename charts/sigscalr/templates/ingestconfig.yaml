@@ -10,7 +10,6 @@ data:
     queryNode: false
     ingestNode: true
     debug: True
-    dataPath: ./data/
     {{ if .Values.logsExporter.enabled }} # make fluentd happy with returned es version
     esVersion: "8.9.3"
     {{ else }}

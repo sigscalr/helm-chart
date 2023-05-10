@@ -54,7 +54,7 @@ etcd:
 
 k8sExporter:
   # Enable k8s events exporter to automatically ship events to sigscalr. If enabled, a cluster role will be created
-  enabled: true
+  enabled: false
   image:
     repository: ghcr.io/opsgenie/kubernetes-event-exporter
     pullPolicy: IfNotPresent
