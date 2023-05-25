@@ -2,7 +2,7 @@
 sigscalr:
   image:
     repository: sigscalr
-    pullPolicy: IfNotPresent
+    pullPolicy: Always
     tag: minikube
   ingest:
     service:
@@ -14,25 +14,25 @@ sigscalr:
       serviceType: "ClusterIP"
       port: 8000
       annotations: {}
+  licenseEnabled : false # todo: make this less hacky
   
-  ingestReplicas: 2
-  queryReplicas: 2
+  ingestReplicas: 3
+  queryReplicas: 3
   # sigscalr configuration
   configs:
     ingestPort: 8081 # port used for sigscalr ingestion servers
     queryPort: 8000 # port used for sigscalr ui webserver
-    grpcPort: 50051 # port used for sigscalr grpc server
-    s3:
-      enabled: true # if etcd is enabled, s3 is required
-      bucketName: sri-tests
-      regionName: us-west-1
+    # s3:
+    #   enabled: false # if etcd is enabled, s3 is required
+    #   bucketName: ""
+    #   regionName: ""
 
   storage:
     # set to true for default class, else will create a new class with below arguments
     defaultClass: true
 
     # size of the volume the PVC will request
-    size: 10Gi 
+    size: 40Gi 
 
     # Use EBS volume as default storage class
     # awsEBS:
@@ -49,19 +49,24 @@ etcd:
   enabled: true
   auth:
     rbac:
-      create: false
-    
+      create: false  
 
 k8sExporter:
   # Enable k8s events exporter to automatically ship events to sigscalr. If enabled, a cluster role will be created
-  enabled: false
+  enabled: true
   image:
     repository: ghcr.io/opsgenie/kubernetes-event-exporter
     pullPolicy: IfNotPresent
     tag: v0.11
   configs:
     index: kubernetes-events # output index name for kubernetes events
-
+  resources: {}
+  #   limits:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
 logsExporter:
   # Logs Exporter launches a fluentd daemonset that tails all container logs at /var/log/containers/*.log
   enabled: true
@@ -69,6 +74,13 @@ logsExporter:
     repository: fluent/fluentd-kubernetes-daemonset
     pullPolicy: IfNotPresent
     tag: v1.14-debian-elasticsearch7-1
+  resources: {}
+  #   limits:
+  #     cpu: 500m
+  #     memory: 512Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
 
 imagePullSecrets: []
 nameOverride: ""
@@ -113,7 +125,7 @@ affinity: {}
 
 aws:
   # AWS credentials
-  # TODO: use secrets
+  # TODO: use secrets/inject creds, this is temporary
   accessKey: ""
   secretKey: ""
-  region: "us-west-1"
+  region: "us-west-1"  

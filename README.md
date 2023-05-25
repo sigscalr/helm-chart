@@ -9,6 +9,11 @@ helm repo add sigscalr-repo https://sigscalr.github.io/helm-chart
 helm install sigscalr sigscalr-repo/sigscalr
 ```
 
+To use an existing license, add the following configmap:
+```
+kubectl create configmap sigscalr-license --from-file=license.txt=license.txt
+```
+
 # Installation
 
 Please ensure that `helm` is installed.

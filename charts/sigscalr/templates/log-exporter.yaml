@@ -30,7 +30,7 @@ spec:
         image: "{{ .Values.logsExporter.image.repository }}:{{ .Values.logsExporter.image.tag }}"
         imagePullPolicy: {{ .Values.logsExporter.image.pullPolicy }}
         resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+          {{- toYaml .Values.logsExporter.resources | nindent 12 }}
         env:
           - name:  FLUENT_ELASTICSEARCH_HOST
             value: {{ include "sigscalr.fullname" . }}-ingest

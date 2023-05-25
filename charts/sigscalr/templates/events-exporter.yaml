@@ -39,7 +39,7 @@ spec:
             - mountPath: /data
               name: cfg
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{- toYaml .Values.k8sExporter.resources | nindent 12 }}
       volumes:
         - name: cfg
           configMap:

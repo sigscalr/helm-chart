@@ -9,7 +9,10 @@ data:
   server.yaml: |-
     queryNode: false
     ingestNode: true
-    debug: True
+    dataDiskThresholdPercent: 1
+    {{ if .Values.sigscalr.licenseEnabled }}
+    licenseKeyPath: "./license.txt"
+    {{ end }}
     {{ if .Values.logsExporter.enabled }} # make fluentd happy with returned es version
     esVersion: "8.9.3"
     {{ else }}

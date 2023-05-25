@@ -4,12 +4,14 @@ metadata:
   name: {{ .Chart.Name }}-query-config
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "sigscalr.labels" . | nindent 4 }}
+    {{ include "sigscalr.labels" . | nindent 4 }}
 data:
   server.yaml: |-
     queryNode: true
     ingestNode: false
-    debug: True
+    {{ if .Values.sigscalr.licenseEnabled }}
+    licenseKeyPath: "./license.txt"
+    {{ end }}
     {{ if .Values.logsExporter.enabled }} # make fluentd happy with returned es version
     esVersion: "8.9.3"
     {{ else }}
