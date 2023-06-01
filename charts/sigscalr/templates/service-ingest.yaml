@@ -1,0 +1,20 @@
+{{- if .Values.sigscalr.ingest.service.serviceType -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "sigscalr.fullname" . }}-ingest-svc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{ include "sigscalr-server.labels" . | nindent 4 }}
+  annotations:
+    {{ toYaml .Values.sigscalr.ingest.service.annotations | nindent 4 }}
+spec:
+  type: {{ .Values.sigscalr.ingest.service.serviceType }}
+  ports:
+    - port: {{ .Values.sigscalr.ingest.service.port }}
+      targetPort: ingestport
+      protocol: TCP
+      name: ingest-http
+  selector:
+    {{- include "sigscalr-server.selectorLabels" . | nindent 4 -}}
+{{- end -}}

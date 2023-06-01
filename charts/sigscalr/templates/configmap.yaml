@@ -7,13 +7,10 @@ metadata:
     {{- include "sigscalr.labels" . | nindent 4 }}
 data:
   server.yaml: |-
-    dataPath: /sigscalr/ 
+    dataPath: /sigscalr/data/
     {{ if .Values.logsExporter.enabled }} # make fluentd happy with returned es version
     esVersion: "8.9.3"
     {{ else }}
     esVersion: "7.9.3"
-    {{ end }}
-    {{ if .Values.sigscalr.ui.enabled }} # add redirect url for ui in config
-    sigscalrHost: {{ include "sigscalr.fullname" . }}:{{ .Values.sigscalr.configs.port }}
     {{ end }}
     {{- toYaml .Values.sigscalr.configs | nindent 4 }}
