@@ -8,8 +8,8 @@ To run tests, try:
 
 {{- if .Values.sigscalr.ingest.service.serviceType -}}
 {{printf "\n" }}
-Forward local port 1234 to the ingest service using: 
-  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-ingest-svc 1234:{{ .Values.sigscalr.ingest.service.port }}
+Forward local port 8081 to the ingest service using: 
+  $ kubectl port-forward svc/{{ include "sigscalr.fullname" . }}-ingest-svc 8081:{{ .Values.sigscalr.ingest.service.port }}
 
 {{- end -}}
 {{- if eq .Values.sigscalr.query.service.serviceType "ClusterIP" }}
