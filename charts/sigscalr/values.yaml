@@ -3,7 +3,7 @@ sigscalr:
   image:
     repository: public.ecr.aws/l3t9n5v5/sigscalr
     pullPolicy: Always
-    tag: 1.1.17
+    tag: 1.1.18
   ingest:
     service:
       serviceType: "ClusterIP"
