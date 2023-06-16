@@ -14,7 +14,6 @@ sigscalr:
       serviceType: "ClusterIP"
       port: 8000
       annotations: {}
-  licenseEnabled : false # todo: make this less hacky
   
   ingestReplicas: 3
   queryReplicas: 1
