@@ -3,7 +3,7 @@ sigscalr:
   image:
     repository: sigscalr
     pullPolicy: Always
-    tag: minikube
+    tag: 1.1.18
   ingest:
     service:
       serviceType: "ClusterIP"
