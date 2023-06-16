@@ -74,7 +74,7 @@ serviceAccount:
 If issues with AWS credentials are encountered, refer to [this guide](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
 
 
-To use an existing `abc.txt`, add the following configmap:
+To use `abc.txt` as a license, add the following configmap:
 ```
 kubectl create configmap sigscalr-license --from-file=license.txt=abc.txt
 ```

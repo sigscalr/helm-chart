@@ -36,20 +36,6 @@ spec:
           image: "{{ .Values.sigscalr.image.repository }}:{{ .Values.sigscalr.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.sigscalr.image.pullPolicy }}
           command: ["./sigscalr", "--config", "server.yaml"]
-          # startupProbe:
-          #   httpGet:
-          #     path: /api/health
-          #     port: queryport
-          #     scheme: HTTP
-          #   failureThreshold: 30
-          #   periodSeconds: 1
-          # livenessProbe:
-          #   httpGet:
-          #     path: /api/health
-          #     port: queryport
-          #     scheme: HTTP
-          #   initialDelaySeconds: 10
-          #   periodSeconds: 5
           ports:
             - name: queryport
               containerPort: {{ .Values.sigscalr.configs.queryPort }}
