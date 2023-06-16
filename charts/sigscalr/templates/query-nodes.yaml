@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       {{ include "sigscalr-query-server.selectorLabels" . | nindent 6 }}
-  serviceName: {{ include "sigscalr.serviceAccountName" . }}
+  serviceName: {{ include "sigscalr.fullname" . }}-query-svc
   replicas: {{ .Values.sigscalr.queryReplicas }}
   podManagementPolicy: "Parallel"
   template:
@@ -21,6 +21,7 @@ spec:
       labels:
         {{ include "sigscalr-query-server.selectorLabels" . | nindent 8 }}
     spec:
+      {{- $licenseName := include "sigscalr-license.name" . -}}
       {{ with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{ toYaml . | nindent 8 }}
@@ -54,37 +55,34 @@ spec:
               containerPort: {{ .Values.sigscalr.configs.queryPort }}
               protocol: TCP
           volumeMounts:
+          {{ if $licenseName }}
+            - name: {{ .Chart.Name }}-license
+              mountPath: /sigscalr/{{ $licenseName }}
+              subPath: {{ $licenseName }}
+          {{ end }}
             - name: {{ .Chart.Name }}-volume-claim
               mountPath: /sigscalr/data
             - name: {{ .Chart.Name }}-query-config
               mountPath: /sigscalr/server.yaml
               subPath: server.yaml
-            - name: {{ .Chart.Name }}-license
-              mountPath: /sigscalr/license.txt
-              subPath: license.txt
-          env:
-            - name: AWS_ACCESS_KEY_ID
-              value: {{ .Values.aws.accessKey }} ## TODO: use secrets
-            - name: AWS_SECRET_ACCESS_KEY
-              value: {{ .Values.aws.secretKey }} ## TODO: use secrets
-            - name: AWS_DEFAULT_REGION
-              value: {{ .Values.aws.region }} ## TODO: use secrets
           resources:
-            {{ toYaml .Values.resources | nindent 12 }}
-      terminationGracePeriodSeconds: 3000 # TODO: less hacky way to do this
+           {{ toYaml .Values.resources | nindent 12 }}
+      terminationGracePeriodSeconds: 1800 # Purposely set to 30 minutes to avoid data loss on s3 flush
       volumes:
-      - name: {{ .Chart.Name }}-query-config
-        configMap:
-          name: {{ .Chart.Name }}-query-config
-          items:
-          - key: server.yaml
-            path: server.yaml
-      - name: {{ .Chart.Name }}-license
-        configMap:
-          name: {{ .Chart.Name }}-license
-          items:
-          - key: license.txt
-            path: license.txt
+        - name: {{ .Chart.Name }}-query-config
+          configMap:
+            name: {{ .Chart.Name }}-query-config
+            items:
+            - key: server.yaml
+              path: server.yaml
+      {{ if $licenseName }}
+        - name: {{ .Chart.Name }}-license
+          configMap:
+            name: {{ .Chart.Name }}-license
+            items:
+            - key: {{ $licenseName }}
+              path: {{ $licenseName }}
+      {{ end }}
   volumeClaimTemplates:
   - metadata:
       name: {{ .Chart.Name }}-volume-claim

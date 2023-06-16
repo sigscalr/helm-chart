@@ -22,6 +22,7 @@ sigscalr:
   configs:
     ingestPort: 8081 # port used for sigscalr ingestion servers
     queryPort: 8000 # port used for sigscalr ui webserver
+    # license:  "" # license file name
     # s3:
     #   enabled: false # if etcd is enabled, s3 is required
     #   bucketName: ""
@@ -122,10 +123,3 @@ nodeSelector: {}
 tolerations: []
 
 affinity: {}
-
-aws:
-  # AWS credentials
-  # TODO: use secrets/inject creds, this is temporary
-  accessKey: ""
-  secretKey: ""
-  region: "us-west-1"  

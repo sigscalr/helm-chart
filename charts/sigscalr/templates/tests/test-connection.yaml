@@ -12,5 +12,5 @@ spec:
     - name: wget
       image: busybox
       command: ['wget']
-      args: ['{{ include "sigscalr.fullname" . }}-ingest:{{ .Values.sigscalr.configs.ingestPort }}/api/health']
+      args: ['{{ include "sigscalr.fullname" . }}-ingest-svc:{{ .Values.sigscalr.configs.ingestPort }}/api/health']
   restartPolicy: Never

@@ -9,11 +9,6 @@ helm repo add sigscalr-repo https://sigscalr.github.io/helm-chart
 helm install sigscalr sigscalr-repo/sigscalr
 ```
 
-To use an existing license, add the following configmap:
-```
-kubectl create configmap sigscalr-license --from-file=license.txt=license.txt
-```
-
 # Installation
 
 Please ensure that `helm` is installed.
@@ -65,4 +60,28 @@ storage:
         hostname: minikube
         capacity: 5Gi 
         path: /data # must be present on local machine
+```
+
+## Credentials
+
+To add AWS credentials, add the following configuration:
+```
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: <<arn-of-role-to-use>>
+```
+
+If issues with AWS credentials are encountered, refer to [this guide](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
+
+
+To use an existing `abc.txt`, add the following configmap:
+```
+kubectl create configmap sigscalr-license --from-file=license.txt=abc.txt
+```
+
+Set the following config:
+```
+sigscalr:
+  configs:
+    license: abc.txt
 ```

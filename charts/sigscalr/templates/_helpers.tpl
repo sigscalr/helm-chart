@@ -169,3 +169,15 @@ storage: 10Gi
 {{ end }}
 {{ end }}
 {{- end }}
+
+{{- define "sigscalr-license.name" -}}
+{{- $licenseName := "" -}}
+{{- if .Values.sigscalr -}}
+  {{- if .Values.sigscalr.configs -}}
+    {{- if .Values.sigscalr.configs.license -}}
+      {{- $licenseName = .Values.sigscalr.configs.license -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $licenseName | trim -}}
+{{- end -}}
