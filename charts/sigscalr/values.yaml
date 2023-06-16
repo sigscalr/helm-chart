@@ -1,7 +1,7 @@
 # Default values for sigscalr.
 sigscalr:
   image:
-    repository: sigscalr
+    repository: public.ecr.aws/l3t9n5v5/sigscalr
     pullPolicy: Always
     tag: 1.1.18
   ingest:
@@ -17,7 +17,7 @@ sigscalr:
   licenseEnabled : false # todo: make this less hacky
   
   ingestReplicas: 3
-  queryReplicas: 3
+  queryReplicas: 1
   # sigscalr configuration
   configs:
     ingestPort: 8081 # port used for sigscalr ingestion servers
@@ -33,7 +33,7 @@ sigscalr:
     defaultClass: true
 
     # size of the volume the PVC will request
-    size: 40Gi 
+    size: 20Gi 
 
     # Use EBS volume as default storage class
     # awsEBS:
@@ -45,7 +45,7 @@ sigscalr:
     #   capacity: 5Gi 
     #   path: /data
 
-# ETCD is used as a distributed key-value store for sigscalr horizontal scaling and HA
+# ETCD is used as a distributed key-value store for sigscalr horizontal scaling
 etcd:
   enabled: true
   auth:
