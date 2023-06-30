@@ -22,14 +22,14 @@ sigscalr:
         enabled: false
         host: chart-example.local
         secretName: ""
-  
   ingestReplicas: 3
   queryReplicas: 1
+
   # sigscalr configuration
   configs:
-    ingestPort: 8081 # port used for sigscalr ingestion servers
-    queryPort: 8000 # port used for sigscalr ui webserver
-    # license:  "" # license file name
+    ingestPort: 8081
+    queryPort: 8000
+    # license:  ""
     # s3:
     #   enabled: false # if etcd is enabled, s3 is required
     #   bucketName: ""
@@ -40,12 +40,12 @@ sigscalr:
     defaultClass: true
 
     # size of the volume the PVC will request
-    size: 20Gi 
+    size: 20Gi
 
     # Use EBS volume as default storage class
     # awsEBS:
     #   parameters: {}
-
+    #
     # Create volume on a single node. The path must be present on the host 
     # local:
     #   hostname: minikube
@@ -67,7 +67,8 @@ k8sExporter:
     pullPolicy: IfNotPresent
     tag: v0.11
   configs:
-    index: kubernetes-events # output index name for kubernetes events
+    # output index name for kubernetes events
+    index: kubernetes-events 
   resources: {}
   #   limits:
   #     cpu: 100m
