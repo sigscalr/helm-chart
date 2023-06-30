@@ -46,10 +46,10 @@ sigscalr:
     # awsEBS:
     #   parameters: {}
     #
-    # Create volume on a single node. The path must be present on the host 
+    # Create volume on a single node. The path must be present on the host
     # local:
     #   hostname: minikube
-    #   capacity: 5Gi 
+    #   capacity: 5Gi
     #   path: /data
 
 # ETCD is used as a distributed key-value store for sigscalr horizontal scaling
@@ -57,7 +57,7 @@ etcd:
   enabled: true
   auth:
     rbac:
-      create: false  
+      create: false
 
 k8sExporter:
   # Enable k8s events exporter to automatically ship events to sigscalr. If enabled, a cluster role will be created
@@ -68,7 +68,7 @@ k8sExporter:
     tag: v0.11
   configs:
     # output index name for kubernetes events
-    index: kubernetes-events 
+    index: kubernetes-events
   resources: {}
   #   limits:
   #     cpu: 100m
