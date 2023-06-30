@@ -54,7 +54,7 @@ sigscalr:
 
 # ETCD is used as a distributed key-value store for sigscalr horizontal scaling
 etcd:
-  enabled: true
+  enabled: false
   auth:
     rbac:
       create: false
