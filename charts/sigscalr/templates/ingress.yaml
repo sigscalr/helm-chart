@@ -1,0 +1,27 @@
+{{-  if .Values.sigscalr.query.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ss-ingress
+  annotations:
+    {{ toYaml .Values.sigscalr.query.ingress.annotations | nindent 4 }}
+spec:
+{{ if .Values.sigscalr.query.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.sigscalr.query.ingress.tls.host }}
+      secretName: {{ .Values.sigscalr.query.ingress.tls.secretName }}
+{{ end }}
+  ingressClassName: {{ .Values.sigscalr.query.ingress.class }}
+  rules:
+  - host: {{ .Values.sigscalr.query.ingress.tls.host }}
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ include "sigscalr.fullname" . }}-query-svc
+              port:
+                number: {{ .Values.sigscalr.query.service.port }}
+{{- end -}}
