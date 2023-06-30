@@ -23,6 +23,11 @@ version: 0.1.14
 # It is recommended to use it with quotes.
 appVersion: "latest"
 
+maintainers:
+  - name: sigscalr
+    email: info@sigscalr.io
+    url: https://sigscalr.io
+
 dependencies:
   - name: etcd
     version: 8.10.1
