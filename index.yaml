@@ -3,6 +3,17 @@ entries:
   sigscalr:
   - apiVersion: v2
     appVersion: latest
+    created: "2023-07-03T11:13:28.612435398Z"
+    description: A Helm chart for a SigScalr Kubernetes deployment with logs & events
+      exporting
+    digest: d03d2e932cf063838d0b2ea49ab43071f13e7642180d188019d53ae9a4496a2b
+    name: sigscalr
+    type: application
+    urls:
+    - https://github.com/sigscalr/helm-chart/releases/download/sigscalr-0.1.17/sigscalr-0.1.17.tgz
+    version: 0.1.17
+  - apiVersion: v2
+    appVersion: latest
     created: "2023-06-20T16:49:47.706870283Z"
     description: A Helm chart for a SigScalr Kubernetes deployment with logs & events
       exporting
@@ -166,4 +177,4 @@ entries:
     urls:
     - https://github.com/sigscalr/helm-chart/releases/download/sigscalr-0.1.0/sigscalr-0.1.0.tgz
     version: 0.1.0
-generated: "2023-06-20T16:49:47.707048182Z"
+generated: "2023-07-03T11:13:28.612556399Z"
