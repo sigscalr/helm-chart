@@ -52,7 +52,7 @@ spec:
               mountPath: /sigscalr/server.yaml
               subPath: server.yaml
           resources:
-            {{ toYaml .Values.resources | nindent 12 }}
+            {{ toYaml .Values.sigscalr.ingest.resources | nindent 12 }}
       terminationGracePeriodSeconds: 1800 # Purposely set to 30 minutes to avoid data loss on s3 flush
       volumes:
         - name: {{ .Chart.Name }}-ingest-config

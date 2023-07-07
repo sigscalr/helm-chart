@@ -1,15 +1,27 @@
 # Default values for sigscalr.
 sigscalr:
+  ingestReplicas: 1
+  queryReplicas: 1
   image:
     repository: public.ecr.aws/l3t9n5v5/sigscalr
     pullPolicy: Always
     tag: 1.1.18
   ingest:
+    resources: {}
     service:
       serviceType: "ClusterIP"
       port: 8081
       annotations: {}
+    ingress:
+      enabled: false
+      annotations: {}
+      class: ""
+      host: ingest-example.local
+      tls:
+        enabled: false
+        secretName: ""
   query:
+    resources: {}
     service:
       serviceType: "ClusterIP"
       port: 8000
@@ -18,17 +30,17 @@ sigscalr:
       enabled: false
       annotations: {}
       class: ""
+      host: query-example.local
       tls:
         enabled: false
-        host: chart-example.local
         secretName: ""
-  ingestReplicas: 3
-  queryReplicas: 1
 
   # sigscalr configuration
   configs:
     ingestPort: 8081
     queryPort: 8000
+    # queryHostname: "" # Set this to the DNS name of your sigscalr instance. i.e. set to the DNS name with no protocol or port
+    # ingestUrl: "" # Set this to the full ingest URL of your sigscalr instance. i.e. set to the full URL with protocol and port
     # license:  ""
     # s3:
     #   enabled: false # if etcd is enabled, s3 is required
@@ -112,19 +124,6 @@ securityContext:
     drop:
     - ALL
   runAsUser: 1000
-
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 nodeSelector: {}
 

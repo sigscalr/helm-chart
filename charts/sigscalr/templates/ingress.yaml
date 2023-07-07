@@ -2,19 +2,19 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ss-ingress
+  name: ss-query-ingress
   annotations:
     {{ toYaml .Values.sigscalr.query.ingress.annotations | nindent 4 }}
 spec:
 {{ if .Values.sigscalr.query.ingress.tls.enabled }}
   tls:
     - hosts:
-        - {{ .Values.sigscalr.query.ingress.tls.host }}
+        - {{ .Values.sigscalr.query.ingress.host }}
       secretName: {{ .Values.sigscalr.query.ingress.tls.secretName }}
 {{ end }}
   ingressClassName: {{ .Values.sigscalr.query.ingress.class }}
   rules:
-  - host: {{ .Values.sigscalr.query.ingress.tls.host }}
+  - host: {{ .Values.sigscalr.query.ingress.host }}
     http:
       paths:
         - path: /
@@ -24,4 +24,32 @@ spec:
               name: {{ include "sigscalr.fullname" . }}-query-svc
               port:
                 number: {{ .Values.sigscalr.query.service.port }}
+{{ end }}
+---
+{{ if .Values.sigscalr.ingest.ingress.enabled }}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ss-ingest-ingress
+  annotations:
+    {{ toYaml .Values.sigscalr.ingest.ingress.annotations | nindent 4 }}
+spec:
+{{ if .Values.sigscalr.ingest.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.sigscalr.ingest.ingress.host }}
+      secretName: {{ .Values.sigscalr.ingest.ingress.tls.secretName }}
+{{ end }}
+  ingressClassName: {{ .Values.sigscalr.ingest.ingress.class }}
+  rules:
+  - host: {{ .Values.sigscalr.ingest.ingress.host }}
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: {{ include "sigscalr.fullname" . }}-ingest-svc
+              port:
+                number: {{ .Values.sigscalr.ingest.service.port }}
 {{- end -}}
