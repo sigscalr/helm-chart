@@ -5,7 +5,7 @@ metadata:
   name: {{ include "sigscalr.fullname" . }}-query-svc
   namespace: {{ .Release.Namespace }}
   labels:
-    {{ include "sigscalr-server.labels" . | nindent 4 }}
+    {{ include "sigscalr-query-server.labels" . | nindent 4 }}
   annotations:
     {{ toYaml .Values.sigscalr.query.service.annotations | nindent 4 }}
 spec:
@@ -16,5 +16,5 @@ spec:
       protocol: TCP
       name: query-http
   selector:
-    {{- include "sigscalr-server.selectorLabels" . | nindent 4 -}}
+    {{- include "sigscalr-query-server.selectorLabels" . | nindent 4 -}}
 {{- end -}}

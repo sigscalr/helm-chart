@@ -1,42 +1,75 @@
 # Default values for sigscalr.
 sigscalr:
+  ingestReplicas: 1
+  queryReplicas: 1
   image:
     repository: public.ecr.aws/l3t9n5v5/sigscalr
     pullPolicy: Always
     tag: 1.1.22
   ingest:
+    resources: {}
     service:
       serviceType: "ClusterIP"
       port: 8081
       annotations: {}
+    ingress:
+      enabled: false
+      annotations: {}
+      class: ""
+      host: ingest-example.local
+      tls:
+        enabled: false
+        secretName: ""
   query:
+    resources: {}
     service:
       serviceType: "ClusterIP"
       port: 8000
       annotations: {}
-  
+    ingress:
+      enabled: false
+      annotations: {}
+      class: ""
+      host: query-example.local
+      tls:
+        enabled: false
+        secretName: ""
+
+  # sigscalr configuration
   configs:
-    ingestPort: 8081 # port used for sigscalr ingestion servers
-    queryPort: 8000 # port used for sigscalr ui webserver
-    queryNode: true
-    ingestNode: true
+    ingestPort: 8081
+    queryPort: 8000
+    # queryHostname: "" # Set this to the DNS name of your sigscalr instance. i.e. set to the DNS name with no protocol or port
+    # ingestUrl: "" # Set this to the full ingest URL of your sigscalr instance. i.e. set to the full URL with protocol and port
+    # license:  ""
+    # s3:
+    #   enabled: false # if etcd is enabled, s3 is required
+    #   bucketName: ""
+    #   regionName: ""
 
   storage:
     # set to true for default class, else will create a new class with below arguments
     defaultClass: true
 
     # size of the volume the PVC will request
-    size: 10Gi 
+    size: 20Gi
 
     # Use EBS volume as default storage class
     # awsEBS:
     #   parameters: {}
-
-    # Create volume on a single node. The path must be present on the host 
+    #
+    # Create volume on a single node. The path must be present on the host
     # local:
     #   hostname: minikube
-    #   capacity: 5Gi 
+    #   capacity: 5Gi
     #   path: /data
+
+# ETCD is used as a distributed key-value store for sigscalr horizontal scaling
+etcd:
+  enabled: false
+  auth:
+    rbac:
+      create: false
 
 k8sExporter:
   # Enable k8s events exporter to automatically ship events to sigscalr. If enabled, a cluster role will be created
@@ -46,8 +79,15 @@ k8sExporter:
     pullPolicy: IfNotPresent
     tag: v0.11
   configs:
-    index: kubernetes-events # output index name for kubernetes events
-
+    # output index name for kubernetes events
+    index: kubernetes-events
+  resources: {}
+  #   limits:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
 logsExporter:
   # Logs Exporter launches a fluentd daemonset that tails all container logs at /var/log/containers/*.log
   enabled: true
@@ -55,6 +95,13 @@ logsExporter:
     repository: fluent/fluentd-kubernetes-daemonset
     pullPolicy: IfNotPresent
     tag: v1.14-debian-elasticsearch7-1
+  resources: {}
+  #   limits:
+  #     cpu: 500m
+  #     memory: 512Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
 
 imagePullSecrets: []
 nameOverride: ""
@@ -77,19 +124,6 @@ securityContext:
     drop:
     - ALL
   runAsUser: 1000
-
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
 
 nodeSelector: {}
 

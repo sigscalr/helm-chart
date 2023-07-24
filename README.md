@@ -61,3 +61,27 @@ storage:
         capacity: 5Gi 
         path: /data # must be present on local machine
 ```
+
+## Credentials
+
+To add AWS credentials, add the following configuration:
+```
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: <<arn-of-role-to-use>>
+```
+
+If issues with AWS credentials are encountered, refer to [this guide](https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html).
+
+
+To use `abc.txt` as a license, add the following configmap:
+```
+kubectl create configmap sigscalr-license --from-file=license.txt=abc.txt
+```
+
+Set the following config:
+```
+sigscalr:
+  configs:
+    license: abc.txt
+```

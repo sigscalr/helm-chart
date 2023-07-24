@@ -1,3 +1,7 @@
 *.tgz
 
 *.DS_Store
+
+license.txt
+
+charts/sigscalr/playground.yaml
