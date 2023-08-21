@@ -3,6 +3,26 @@ entries:
   sigscalr:
   - apiVersion: v2
     appVersion: latest
+    created: "2023-08-21T11:01:20.704566643Z"
+    dependencies:
+    - condition: etcd.enabled
+      name: etcd
+      repository: https://charts.bitnami.com/bitnami
+      version: 8.10.1
+    description: A Helm chart for a SigScalr Kubernetes deployment with logs & events
+      exporting
+    digest: d424f61bdc13be088de4baf5708f444097c0172770b52f6ef899838ea5aee75b
+    maintainers:
+    - email: info@sigscalr.io
+      name: sigscalr
+      url: https://sigscalr.io
+    name: sigscalr
+    type: application
+    urls:
+    - https://github.com/sigscalr/helm-chart/releases/download/sigscalr-0.1.19/sigscalr-0.1.19.tgz
+    version: 0.1.19
+  - apiVersion: v2
+    appVersion: latest
     created: "2023-07-19T16:34:23.765524846Z"
     description: A Helm chart for a SigScalr Kubernetes deployment with logs & events
       exporting
@@ -188,4 +208,4 @@ entries:
     urls:
     - https://github.com/sigscalr/helm-chart/releases/download/sigscalr-0.1.0/sigscalr-0.1.0.tgz
     version: 0.1.0
-generated: "2023-07-19T16:34:23.765786353Z"
+generated: "2023-08-21T11:01:20.704769444Z"
