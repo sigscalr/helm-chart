@@ -5,7 +5,7 @@ sigscalr:
   image:
     repository: public.ecr.aws/l3t9n5v5/sigscalr
     pullPolicy: Always
-    tag: 1.1.25
+    tag: 1.1.26
   ingest:
     resources: {}
     service:
