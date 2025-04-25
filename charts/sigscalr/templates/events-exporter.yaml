@@ -40,6 +40,10 @@ spec:
               name: cfg
           resources:
             {{- toYaml .Values.k8sExporter.resources | nindent 12 }}
+          {{- with .Values.sigscalr.configs.env }}
+          env:
+            {{ toYaml . | nindent 12 }}
+          {{- end }}
       volumes:
         - name: cfg
           configMap:

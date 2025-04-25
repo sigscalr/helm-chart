@@ -39,6 +39,7 @@ sigscalr:
   configs:
     ingestPort: 8081
     queryPort: 8000
+    env: []
     # queryHostname: "" # Set this to the DNS name of your sigscalr instance. i.e. set to the DNS name with no protocol or port
     # ingestUrl: "" # Set this to the full ingest URL of your sigscalr instance. i.e. set to the full URL with protocol and port
     # license:  ""
